@@ -1,0 +1,39 @@
+{
+  "name": "update-readme",
+  "description": "Update or lint a package.json based on globally stored preferences.",
+  "version": "0.1.0",
+  "homepage": "https://github.com/jonschlinkert/update-readme",
+  "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
+  "repository": "jonschlinkert/update-readme",
+  "bugs": {
+    "url": "https://github.com/jonschlinkert/update-readme/issues"
+  },
+  "license": "MIT",
+  "files": [
+    "index.js",
+    "updatefile.js"
+  ],
+  "main": "index.js",
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "dependencies": {
+    "is-false": "^0.1.1",
+    "middleware-utils": "^0.1.4",
+    "rimraf": "^2.4.3",
+    "union-value": "^0.1.1"
+  },
+  "keywords": [
+    "pkg",
+    "update"
+  ],
+  "verb": {
+    "related": {
+      "description": "",
+      "list": []
+    }
+  }
+}
