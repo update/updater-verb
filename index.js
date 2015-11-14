@@ -23,13 +23,30 @@ middleware.verbrc = function(file, next) {
 };
 
 /**
- * Update the dest path for ".verb.md" files to "readme.md"
+ * Update `related` helper arguments to the latest.
+ *
+ * @param {[type]} base
+ * @return {[type]}
  */
 
-middleware.verbmd = function(file, next) {
-  if (isFalse(file, 'readme')) return next();
-  file.path = 'readme.md';
-  next();
+middleware.related = function(base) {
+  return function(file, next) {
+    var re = /\{%= related\((?:(\[(.*)\])|(.*))\) %}/;
+    var str = file.content;
+    var m = re.exec(str);
+
+    if (!m) return next();
+
+    if (m[2] && m[1]) {
+      var keys = m[2].split(/[,'" ]+/).filter(Boolean);
+      var pkg = base.getFile('package.json');
+      union(pkg.json, 'verb.related.list', keys);
+      file.content = str.split(m[1]).join('verb.related.list');
+    } else if (m[3]) {
+      file.content = str.split(m[3]).join('verb.related.list');
+    }
+    next();
+  };
 };
 
 /**
@@ -39,46 +56,71 @@ middleware.verbmd = function(file, next) {
  * @return {[type]}
  */
 
-middleware.related = function(base) {
-  return function(view, next) {
-    var re = /\{%= related\((?:(\[(.*)\])|(.*))\) %}/;
-    var str = view.content;
-    var m = re.exec(str);
+middleware.jscomments = function(file, next) {
+  var re = /\{%= (?:js)?comments\(['"](.*)['"]\) %}/;
+  file.content = file.content.replace(re, '{%= apidocs(\'$1\') %}');
+  next();
+};
 
-    if (!m) return next();
+/**
+ * Make sure "install" has a header
+ */
 
-    if (m[2] && m[1]) {
-      var keys = m[2].split(/[,'" ]+/).filter(Boolean);
-      var pkg = base.files.getView('package.json');
-      union(pkg.json, 'verb.related.list', keys);
-      view.content = str.split(m[1]).join('verb.related.list');
-    } else if (m[3]) {
-      view.content = str.split(m[3]).join('verb.related.list');
+middleware.install = function(file, next) {
+  var str = file.content;
+  var idx = str.indexOf('{%= include("install');
+  var prefix = str.slice(0, idx).replace(/\s+$/, '');
+  var suffix = str.slice(idx);
+  var last = prefix.split('\n').pop();
+  if (!/## Install/.test(last)) {
+    prefix += '\n\n## Install\n\n';
+    file.content = prefix + suffix;
+  }
+  next(null, file);
+};
+
+/**
+ * Strip lint deps comments from .verb.md
+ */
+
+middleware.lintDeps = function(file, next) {
+  var re = /<!--\s*deps:\s*mocha\s*-->/;
+  if (re.test(file.content)) {
+    file.content = file.content.replace(re, '');
+  }
+  next();
+};
+
+/**
+ * Add a travis badge if the repo has `.travis.yml` and
+ * no badge already exists.
+ */
+
+middleware.travis = function(base) {
+  return function(file, next) {
+    if (!base.getFile('.travis.yml')) {
+      return next();
     }
+
+    var snippet = '{%= badge("travis") %}';
+    var str = file.content;
+    var idx = str.indexOf(snippet);
+    if (idx !== -1) return next();
+
+    var lines = str.split('\n');
+    lines[0] += ' ' + snippet;
+    str = lines.join('\n');
+    file.content = str;
     next();
   };
 };
 
 /**
- * Make sure "install" has a header
- * TODO:
- *
- * ## Install
- * {%= include
+ * Ensure a single newline at the end of .verb.md
  */
 
-// middleware.install = function(file, next) {
-//   if (isFalse(file, 'readme')) return next();
-//   file.path = 'readme.md';
-//   next();
-// };
-
-/**
- * Add a travis badge if the repo has `.travis.yml`
- */
-
-// middleware.travis = function(file, next) {
-//   if (isFalse(file, 'readme')) return next();
-//   file.path = 'readme.md';
-//   next();
-// };
+middleware.whitespace = function(file, next) {
+  file.content = file.content.trim();
+  file.content += '\n';
+  next();
+};

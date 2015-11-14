@@ -32,8 +32,11 @@
   ],
   "verb": {
     "related": {
-      "description": "",
-      "list": []
+      "list": [
+        "foo",
+        "bar"
+      ],
+      "description": ""
     }
   }
 }
