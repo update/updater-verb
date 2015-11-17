@@ -1,7 +1,6 @@
 'use strict';
 
 var union = require('union-value');
-var isFalse = require('is-false');
 var rimraf = require('rimraf');
 
 /**
@@ -16,7 +15,7 @@ var middleware = module.exports;
 
 middleware.verbrc = function(file, next) {
   file.path = '.verb.md';
-  rimraf('.verbrc.md', function (err) {
+  rimraf('.verbrc.md', function(err) {
     if (err) return next(err);
     next(null, file);
   });

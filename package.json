@@ -21,22 +21,20 @@
     "test": "mocha"
   },
   "dependencies": {
-    "is-false": "^0.1.1",
     "middleware-utils": "^0.1.4",
     "rimraf": "^2.4.3",
-    "union-value": "^0.1.1"
+    "union-value": "^0.2.1"
   },
   "keywords": [
     "pkg",
-    "update"
+    "update",
+    "updater"
   ],
   "verb": {
     "related": {
       "list": [
-        "foo",
-        "bar"
-      ],
-      "description": ""
+        "update"
+      ]
     }
   }
 }
