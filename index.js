@@ -107,6 +107,10 @@ middleware.travis = function(base) {
     var idx = str.indexOf(snippet);
     if (idx !== -1) return next();
 
+    if (!hasTests(base.views.files)) {
+      return next();
+    }
+
     var lines = str.split('\n');
     lines[0] += ' ' + snippet;
     str = lines.join('\n');
@@ -124,3 +128,16 @@ middleware.whitespace = function(file, next) {
   file.content += '\n';
   next();
 };
+
+/**
+ * Utils
+ */
+
+function hasTests(files) {
+  for (var key in files) {
+    if (/test/.test(key)) {
+      return true;
+    }
+  }
+  return false;
+}
