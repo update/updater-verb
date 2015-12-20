@@ -1,5 +1,6 @@
 'use strict';
 
+var extend = require('extend-shallow');
 var union = require('union-value');
 var rimraf = require('rimraf');
 
@@ -24,26 +25,44 @@ middleware.verbrc = function(file, next) {
 /**
  * Update `related` helper arguments to the latest.
  *
- * @param {[type]} base
- * @return {[type]}
+ * @param {Object} `app` Instance of update
  */
 
-middleware.related = function(base) {
+middleware.related = function(app) {
   return function(file, next) {
-    var re = /\{%= related\((?:(\[(.*)\])|(.*))\) %}/;
-    var str = file.content;
-    var m = re.exec(str);
-
-    if (!m) return next();
-
-    if (m[2] && m[1]) {
-      var keys = m[2].split(/[,'" ]+/).filter(Boolean);
-      var pkg = base.getFile('package.json');
-      union(pkg.json, 'verb.related.list', keys);
-      file.content = str.split(m[1]).join('verb.related.list');
-    } else if (m[3]) {
-      file.content = str.split(m[3]).join('verb.related.list');
+    var pkg = app.getFile('package.json');
+    if (!pkg) {
+      next(new Error('middleware.related needs a package.json file'));
+      return;
     }
+
+    file.content = extractTag(file.content, pkg.json, {
+      prop: 'verb.related.list',
+      tag: 'related'
+    });
+
+    next();
+  };
+};
+
+/**
+ * Update `reflinks` helper arguments to the latest.
+ *
+ * @param {Object} `app` Instance of `update`
+ */
+
+middleware.reflinks = function(app) {
+  return function(file, next) {
+    var pkg = app.getFile('package.json');
+    if (!pkg) {
+      next(new Error('middleware.reflinks needs a package.json file'));
+      return;
+    }
+
+    file.content = extractTag(file.content, pkg.json, {
+      prop: 'verb.reflinks',
+      tag: 'reflinks'
+    });
     next();
   };
 };
@@ -62,16 +81,32 @@ middleware.jscomments = function(file, next) {
 };
 
 /**
+ * Update `related` helper arguments to the latest.
+ *
+ * @param {[type]} base
+ * @return {[type]}
+ */
+
+middleware.license = function(file, next) {
+  var re = /\{%= license\(.*\) %}/;
+  file.content = file.content.replace(re, '{%= license %}');
+  next();
+};
+
+/**
  * Make sure "install" has a header
  */
 
 middleware.install = function(file, next) {
   var str = file.content;
-  var idx = str.indexOf('{%= include("install');
-  var prefix = str.slice(0, idx).replace(/\s+$/, '');
-  var suffix = str.slice(idx);
+  var m = /\{%= include\(['"]install[^%]+\) %}/.exec(str);
+  if (!m) return next();
+
+  var prefix = str.slice(0, m.index).replace(/\s+$/, '');
+  var suffix = str.slice(m.index);
+
   var last = prefix.split('\n').pop();
-  if (!/## Install/.test(last)) {
+  if (!/^#+ Install/gm.test(last)) {
     prefix += '\n\n## Install\n\n';
     file.content = prefix + suffix;
   }
@@ -84,6 +119,18 @@ middleware.install = function(file, next) {
 
 middleware.lintDeps = function(file, next) {
   var re = /<!--\s*deps:\s*mocha\s*-->/;
+  if (re.test(file.content)) {
+    file.content = file.content.replace(re, '');
+  }
+  next();
+};
+
+/**
+ * Strip apidocs comments from .verb.md
+ */
+
+middleware.htmlComments = function(file, next) {
+  var re = /<!--\s*add.*-->\n*/g;
   if (re.test(file.content)) {
     file.content = file.content.replace(re, '');
   }
@@ -107,6 +154,10 @@ middleware.travis = function(base) {
     if (idx !== -1) return next();
 
     if (!hasTests(base.views.files)) {
+      return next();
+    }
+
+    if (hasLayout(str)) {
       return next();
     }
 
@@ -139,4 +190,44 @@ function hasTests(files) {
     }
   }
   return false;
+}
+
+function hasLayout(str) {
+  return !/^# /.test(str);
+}
+
+/**
+ * Extract arguments from a tag in the given string.
+ */
+
+function extractTag(str, json, options) {
+  var opts = extend({}, options);
+  if (!opts.prop) opts.prop = 'verb.' + opts.tag;
+
+  // if the tag occurs more than once, we'll assume it's
+  // because the user has defined different values for each
+  // one,
+  var matches = str.split('{%= ' + opts.tag);
+  if (matches.length > 2) {
+    return str;
+  }
+
+  var reStr = '{%= ' + opts.tag + '\\(\\[(.*)\\].*\\) %}';
+  var re = new RegExp(reStr);
+  var match = re.exec(str);
+  if (!match) return str;
+
+
+  // parse the array elements from the tag
+  var params = match[1];
+  if (params) {
+    var keys = params.split(/[,'" ]+/).filter(Boolean);
+
+    // add the array of items to `verb[prop]` in package.json
+    union(json, opts.prop, keys);
+  }
+
+  // replace the array with a variable
+  var res = '{%= ' + opts.tag + '(' + opts.prop + ') %}';
+  return str.replace(re, res);
 }
