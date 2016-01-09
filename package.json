@@ -1,12 +1,12 @@
 {
-  "name": "update-readme",
-  "description": "Update or lint a package.json based on globally stored preferences.",
+  "name": "update-verb",
+  "description": "Update a .verb.md file to use the latest conventions and fix formatting mistakes or incompatibilities.",
   "version": "0.1.0",
-  "homepage": "https://github.com/jonschlinkert/update-readme",
+  "homepage": "https://github.com/jonschlinkert/update-verb",
   "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
-  "repository": "jonschlinkert/update-readme",
+  "repository": "jonschlinkert/update-verb",
   "bugs": {
-    "url": "https://github.com/jonschlinkert/update-readme/issues"
+    "url": "https://github.com/jonschlinkert/update-verb/issues"
   },
   "license": "MIT",
   "files": [
@@ -20,6 +20,7 @@
   "scripts": {
     "test": "mocha"
   },
+  "preferGlobal": true,
   "dependencies": {
     "middleware-utils": "^0.1.4",
     "rimraf": "^2.4.3",
