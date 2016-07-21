@@ -1,7 +1,7 @@
 {
   "name": "updater-verb",
   "description": "Update a .verb.md file to use the latest conventions and fix formatting mistakes or incompatibilities.",
-  "version": "0.1.1",
+  "version": "0.1.3",
   "homepage": "https://github.com/update/updater-verb",
   "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
   "repository": "update/updater-verb",
