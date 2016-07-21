@@ -25,10 +25,12 @@
     "test": "mocha"
   },
   "dependencies": {
+    "copy": "^0.2.3",
     "delete": "^0.3.2",
     "extend-shallow": "^2.0.1",
     "fs-exists-sync": "^0.1.0",
     "gulp-middleware": "^0.1.0",
+    "is-valid-app": "^0.2.0",
     "lazy-cache": "^2.0.1",
     "through2": "^2.0.1",
     "union-value": "^0.2.3"
@@ -49,35 +51,34 @@
     "updaterplugin",
     "verb"
   ],
+  "devDependencies": {
+    "generate": "^0.9.8",
+    "global-modules": "^0.2.2",
+    "gulp-format-md": "^0.1.9",
+    "mocha": "^2.5.3",
+    "npm-install-global": "^0.1.2"
+  },
   "verb": {
-    "related": {
-      "list": [
-        "update"
-      ]
-    },
-    "toc": false,
-    "layout": "updater",
+    "toc": true,
+    "layout": "common-minimal",
     "tasks": [
       "readme"
     ],
     "plugins": [
       "gulp-format-md"
     ],
-    "lint": {
-      "reflinks": true
+    "related": {
+      "list": [
+        "update"
+      ]
     },
     "reflinks": [
       "update",
       "verb",
       "verb-generate-readme"
-    ]
-  },
-  "devDependencies": {
-    "bdd-stdin": "^0.2.0",
-    "generate": "^0.9.8",
-    "global-modules": "^0.2.2",
-    "gulp-format-md": "^0.1.9",
-    "mocha": "^2.5.3",
-    "npm-install-global": "^0.1.2"
+    ],
+    "lint": {
+      "reflinks": true
+    }
   }
 }
