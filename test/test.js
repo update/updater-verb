@@ -6,11 +6,9 @@ var path = require('path');
 var assert = require('assert');
 var generate = require('generate');
 var npm = require('npm-install-global');
-var gm = require('global-modules');
 var del = require('delete');
 var copy = require('copy');
 var generator = require('..');
-var pkg = require('../package');
 var app;
 
 var cwd = path.resolve.bind(path, process.cwd());
@@ -141,7 +139,7 @@ describe('updater-verb', function() {
       app
         .register('foo', generator)
         .register('bar', generator)
-        .register('baz', generator)
+        .register('baz', generator);
       app.generate('foo.bar.baz', exists('.verb.md', cb));
     });
   });

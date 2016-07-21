@@ -25,15 +25,26 @@
     "test": "mocha"
   },
   "dependencies": {
-    "copy": "^0.2.3",
     "delete": "^0.3.2",
     "extend-shallow": "^2.0.1",
     "fs-exists-sync": "^0.1.0",
-    "gulp-middleware": "^0.1.0",
     "is-valid-app": "^0.2.0",
     "lazy-cache": "^2.0.1",
     "through2": "^2.0.1",
     "union-value": "^0.2.3"
+  },
+  "devDependencies": {
+    "copy": "^0.2.3",
+    "generate": "^0.9.8",
+    "gulp": "^3.9.1",
+    "gulp-eslint": "^3.0.1",
+    "gulp-format-md": "^0.1.9",
+    "gulp-istanbul": "^1.0.0",
+    "gulp-middleware": "^0.1.0",
+    "gulp-mocha": "^2.2.0",
+    "gulp-unused": "^0.1.2",
+    "mocha": "^2.5.3",
+    "npm-install-global": "^0.1.2"
   },
   "keywords": [
     "fix",
@@ -51,13 +62,6 @@
     "updaterplugin",
     "verb"
   ],
-  "devDependencies": {
-    "generate": "^0.9.8",
-    "global-modules": "^0.2.2",
-    "gulp-format-md": "^0.1.9",
-    "mocha": "^2.5.3",
-    "npm-install-global": "^0.1.2"
-  },
   "verb": {
     "toc": true,
     "layout": "common-minimal",

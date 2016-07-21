@@ -42,10 +42,3 @@ module.exports = function(app) {
 
   app.task('default', ['verb']);
 };
-
-function logger(msg) {
-  return function(file, next) {
-    console.log(msg + ' readme');
-    next();
-  };
-}
