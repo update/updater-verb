@@ -1,41 +1,83 @@
 {
-  "name": "update-verb",
+  "name": "updater-verb",
   "description": "Update a .verb.md file to use the latest conventions and fix formatting mistakes or incompatibilities.",
   "version": "0.1.0",
-  "homepage": "https://github.com/jonschlinkert/update-verb",
+  "homepage": "https://github.com/update/updater-verb",
   "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
-  "repository": "jonschlinkert/update-verb",
+  "repository": "update/updater-verb",
   "bugs": {
-    "url": "https://github.com/jonschlinkert/update-verb/issues"
+    "url": "https://github.com/update/updater-verb/issues"
   },
   "license": "MIT",
   "files": [
     "index.js",
+    "lib",
+    "LICENSE",
+    "README.md",
     "updatefile.js"
   ],
   "main": "index.js",
+  "preferGlobal": true,
   "engines": {
     "node": ">=0.10.0"
   },
   "scripts": {
     "test": "mocha"
   },
-  "preferGlobal": true,
   "dependencies": {
-    "middleware-utils": "^0.1.4",
-    "rimraf": "^2.4.3",
-    "union-value": "^0.2.1"
+    "delete": "^0.3.2",
+    "extend-shallow": "^2.0.1",
+    "fs-exists-sync": "^0.1.0",
+    "gulp-middleware": "^0.1.0",
+    "lazy-cache": "^2.0.1",
+    "through2": "^2.0.1",
+    "union-value": "^0.2.3"
   },
   "keywords": [
+    "fix",
+    "lint",
+    "linter",
+    "maintain",
     "pkg",
+    "plugin",
+    "plugins",
+    "up-to-date",
     "update",
-    "updater"
+    "update-plugin",
+    "update-updater",
+    "updater",
+    "updaterplugin",
+    "verb"
   ],
   "verb": {
     "related": {
       "list": [
         "update"
       ]
-    }
+    },
+    "toc": false,
+    "layout": "updater",
+    "tasks": [
+      "readme"
+    ],
+    "plugins": [
+      "gulp-format-md"
+    ],
+    "lint": {
+      "reflinks": true
+    },
+    "reflinks": [
+      "update",
+      "verb",
+      "verb-generate-readme"
+    ]
+  },
+  "devDependencies": {
+    "bdd-stdin": "^0.2.0",
+    "generate": "^0.9.8",
+    "global-modules": "^0.2.2",
+    "gulp-format-md": "^0.1.9",
+    "mocha": "^2.5.3",
+    "npm-install-global": "^0.1.2"
   }
 }

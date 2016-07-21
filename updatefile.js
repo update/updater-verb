@@ -4,7 +4,6 @@ var middleware = require('./lib/middleware');
 var utils = require('./lib/utils');
 
 module.exports = function(app, base, env) {
-
   app.task('verb', function() {
     return app.src('.verb*.md')
       .pipe(utils.through.obj(function(file, enc, next) {
