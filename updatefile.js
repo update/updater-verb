@@ -18,7 +18,7 @@ module.exports = function(app) {
             next(err);
             return;
           }
-          if (file.basename !== filename) {
+          if (file.basename !== filename && app.options.silent !== true) {
             app.log.success('renamed', file.relative);
           }
           file.basename = filename;
